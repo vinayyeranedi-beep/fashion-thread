@@ -3,20 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ThreadCraft — Custom T-Shirt Studio</title>
+  <title>ThreadCraft — Custom T-Shirt Studio & Printing</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0B0A0C;
       --card: #151418;
       --card-soft: #1B1A20;
       --border: #28262E;
+      --border-light: rgba(255, 255, 255, 0.1);
       --paper: #FAF8F5;
       --paper-dim: #9C98A6;
+      --paper-muted: #6A6773;
       --thread: #FF8A00;
       --signal: #E53935;
+      --gold: #F4B14A;
     }
     * {
       box-sizing: border-box;
@@ -27,385 +30,1204 @@
       background-color: var(--bg);
       color: var(--paper);
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      line-height: 1.5;
+      line-height: 1.6;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
+
+    /* Top Navigation Header */
     header {
       border-bottom: 1px solid var(--border);
-      padding: 1.25rem 2rem;
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(11, 10, 12, 0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(11, 10, 12, 0.9);
+      backdrop-filter: blur(16px);
       position: sticky;
       top: 0;
-      z-index: 50;
+      z-index: 100;
     }
     .brand {
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      cursor: pointer;
     }
-    .brand-badge {
-      background: linear-gradient(135deg, var(--thread), #FFB703);
-      color: #000;
-      font-weight: 800;
-      font-size: 0.75rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 999px;
-      letter-spacing: 1px;
-    }
-    .brand-title {
+    .brand-logo {
       font-size: 1.25rem;
       font-weight: 800;
-      letter-spacing: -0.5px;
+      letter-spacing: 2px;
+      color: var(--paper);
     }
+    .brand-badge {
+      background: rgba(255, 138, 0, 0.18);
+      color: var(--thread);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.65rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 138, 0, 0.4);
+      letter-spacing: 1px;
+    }
+
+    /* Navigation Links / Tabs */
     .nav-links {
       display: flex;
-      gap: 1rem;
       align-items: center;
-    }
-    .btn {
-      padding: 0.6rem 1.25rem;
+      gap: 0.5rem;
+      background: var(--card-soft);
+      padding: 4px;
       border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.875rem;
+      border: 1px solid var(--border);
+    }
+    .nav-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--paper-dim);
+      padding: 0.5rem 1.15rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.85rem;
       cursor: pointer;
-      text-decoration: none;
       transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
-    .btn-primary {
+    .nav-tab-btn:hover {
+      color: var(--paper);
+    }
+    .nav-tab-btn.active {
+      background: var(--signal);
+      color: var(--paper);
+      box-shadow: 0 2px 10px rgba(229, 57, 53, 0.35);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .whatsapp-btn {
+      background: rgba(229, 57, 53, 0.15);
+      border: 1px solid rgba(229, 57, 53, 0.4);
+      color: #FF6666;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+    .whatsapp-btn:hover {
+      background: var(--signal);
+      color: #fff;
+    }
+
+    /* Mobile Bottom Navigation */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(18, 17, 22, 0.95);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border);
+      padding: 8px 12px;
+      z-index: 100;
+      justify-content: space-around;
+    }
+    .mobile-tab-btn {
+      background: none;
+      border: none;
+      color: var(--paper-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 12px;
+    }
+    .mobile-tab-btn.active {
+      color: var(--paper);
+      background: rgba(229, 57, 53, 0.2);
+    }
+
+    @media (max-width: 840px) {
+      .nav-links {
+        display: none;
+      }
+      .mobile-nav {
+        display: flex;
+      }
+      body {
+        padding-bottom: 70px;
+      }
+    }
+
+    /* Page Views */
+    .view-panel {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .view-panel.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* Section Typography */
+    .section-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--thread);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .section-title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      color: var(--paper);
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+    .section-desc {
+      color: var(--paper-dim);
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      max-width: 650px;
+    }
+
+    /* Hero / Home View */
+    .home-hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3rem;
+      align-items: center;
+      margin-bottom: 4rem;
+    }
+    @media (max-width: 900px) {
+      .home-hero {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+    .hero-btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+    .hero-btn-primary {
       background: var(--thread);
       color: #000;
       border: none;
     }
-    .btn-primary:hover {
-      background: #FFA033;
-      transform: translateY(-1px);
+    .hero-btn-primary:hover {
+      background: #FFA333;
+      transform: translateY(-2px);
     }
-    .btn-secondary {
+    .hero-btn-secondary {
       background: var(--card-soft);
-      color: var(--paper);
       border: 1px solid var(--border);
+      color: var(--paper);
     }
-    .btn-secondary:hover {
+    .hero-btn-secondary:hover {
       border-color: var(--paper-dim);
     }
-    .hero {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 4rem 2rem;
+
+    /* Stats Ribbon */
+    .stats-ribbon {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      align-items: center;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 3rem 0;
     }
-    @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-        padding: 2.5rem 1.5rem;
-      }
-    }
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(255, 138, 0, 0.1);
-      border: 1px solid rgba(255, 138, 0, 0.3);
-      padding: 0.35rem 0.85rem;
-      border-radius: 999px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--thread);
-      margin-bottom: 1.5rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .hero h1 {
-      font-size: 3rem;
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 1.25rem;
-      letter-spacing: -1px;
-    }
-    .hero h1 span {
-      background: linear-gradient(135deg, #FFB703, #FF8A00);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .hero p {
-      color: var(--paper-dim);
-      font-size: 1.1rem;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-    }
-    .showcase-card {
+    .stat-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 28px;
+      border-radius: 18px;
+      padding: 1.5rem;
+    }
+    .stat-val {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--thread);
+      letter-spacing: -1px;
+    }
+    .stat-label {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--paper);
+      margin: 0.25rem 0;
+    }
+    .stat-sub {
+      color: var(--paper-dim);
+      font-size: 0.85rem;
+    }
+
+    /* Interactive 3D Studio Mockup Stage */
+    .studio-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 2.5rem;
+    }
+    @media (max-width: 960px) {
+      .studio-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .studio-canvas-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
       overflow: hidden;
       position: relative;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
     }
-    .showcase-img-container {
+    .canvas-display {
+      height: 480px;
       position: relative;
-      width: 100%;
-      height: 440px;
-      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #1F1D24 0%, #0D0C0F 100%);
+      overflow: hidden;
+      transition: background 0.3s;
     }
-    .showcase-img {
+    .canvas-display img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: opacity 0.3s ease;
     }
-    .showcase-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 1.5rem;
-      background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.4), transparent);
+    .tshirt-vector-mock {
+      position: relative;
+      width: 320px;
+      height: 380px;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-    .badge-pill {
-      background: rgba(11, 10, 12, 0.85);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 0.35rem 0.75rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--thread);
-      display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: center;
     }
-    .view-toggles {
+    .shirt-silhouette {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      transition: fill 0.3s ease;
+    }
+    .shirt-print-artwork {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+      z-index: 10;
+      border-radius: 8px;
+    }
+    .shirt-print-text {
+      position: absolute;
+      top: 38%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 10;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+
+    /* Studio Controls Panel */
+    .controls-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 1.75rem;
       display: flex;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 999px;
-      padding: 3px;
-      gap: 4px;
+      flex-direction: column;
+      gap: 1.5rem;
     }
-    .toggle-btn {
-      padding: 0.4rem 0.9rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
+    .control-group h4 {
+      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
       color: var(--paper-dim);
-      background: transparent;
-      border: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.75rem;
+    }
+    .color-swatches {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .color-swatch {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .color-swatch.active {
+      border-color: #FFF;
+      transform: scale(1.15);
+    }
+    .designs-chips {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .design-chip {
+      padding: 0.5rem 0.9rem;
+      border-radius: 999px;
+      background: var(--card-soft);
+      border: 1px solid var(--border);
+      color: var(--paper-dim);
+      font-size: 0.8rem;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .toggle-btn.active {
+    .design-chip.active {
       background: var(--thread);
       color: #000;
+      border-color: var(--thread);
     }
-    .specs-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      padding: 1.25rem 1.5rem;
+    .size-chips {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .size-chip {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: var(--card-soft);
-      border-top: 1px solid var(--border);
-      gap: 1rem;
-    }
-    .spec-item h4 {
-      font-size: 0.75rem;
-      color: var(--paper-dim);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 0.25rem;
-    }
-    .spec-item p {
-      font-size: 0.9rem;
-      font-weight: 700;
+      border: 1px solid var(--border);
       color: var(--paper);
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    .features-section {
-      max-width: 1200px;
-      margin: 2rem auto 4rem;
-      padding: 0 2rem;
+    .size-chip.active {
+      background: var(--signal);
+      border-color: var(--signal);
     }
-    .features-grid {
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--card-soft);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 12px;
+      width: fit-content;
+    }
+    .stepper-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--paper);
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .stepper-val {
+      font-weight: 800;
+      font-size: 1.1rem;
+      min-width: 30px;
+      text-align: center;
+    }
+    .price-box {
+      background: var(--card-soft);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-top: auto;
+    }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .total-price {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--thread);
+    }
+
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .service-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--thread);
+    }
+    .service-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--thread);
+      margin-bottom: 0.5rem;
+    }
+    .service-card h3 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .service-card p {
+      color: var(--paper-dim);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Gallery Grid */
+    .gallery-filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+    .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
     }
-    .feature-card {
+    .gallery-card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 1.75rem;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
-    .feature-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: rgba(255, 138, 0, 0.12);
-      border: 1px solid rgba(255, 138, 0, 0.25);
+    .gallery-card:hover {
+      transform: translateY(-3px);
+    }
+    .gallery-preview {
+      height: 220px;
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--thread);
-      font-size: 1.25rem;
-      margin-bottom: 1.25rem;
+      overflow: hidden;
     }
-    .feature-card h3 {
-      font-size: 1.15rem;
+    .gallery-info {
+      padding: 1.25rem;
+    }
+    .gallery-info h4 {
+      font-size: 1.1rem;
       font-weight: 700;
-      margin-bottom: 0.5rem;
     }
-    .feature-card p {
-      color: var(--paper-dim);
-      font-size: 0.925rem;
-      line-height: 1.6;
-    }
-    footer {
-      margin-top: auto;
-      border-top: 1px solid var(--border);
-      padding: 2rem;
-      text-align: center;
+    .gallery-info p {
       color: var(--paper-dim);
       font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Orders / Quotes */
+    .quotes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .quote-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* FAQs */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 800px;
+    }
+    .faq-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+    }
+    .faq-question {
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-answer {
+      color: var(--paper-dim);
+      font-size: 0.95rem;
+      margin-top: 0.75rem;
+      line-height: 1.6;
+      display: none;
+    }
+    .faq-card.open .faq-answer {
+      display: block;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      margin-top: auto;
+      background: var(--card);
+      text-align: center;
+      color: var(--paper-dim);
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
 
+  <!-- Top Navigation Header with all 6 Tabs -->
   <header>
-    <div class="brand">
-      <div class="brand-badge">PRO</div>
-      <div class="brand-title">ThreadCraft</div>
+    <div class="brand" onclick="switchTab('home')">
+      <div class="brand-logo">THREADCRAFT</div>
+      <div class="brand-badge">DEMO</div>
     </div>
-    <div class="nav-links">
-      <a href="https://github.com/vinayyeranedi-beep/fashion-thread" target="_blank" class="btn btn-secondary">
-        GitHub Repo
-      </a>
-      <a href="#customizer" class="btn btn-primary">
-        Explore Studio
+
+    <!-- All Primary Options / Navigation Views -->
+    <nav class="nav-links">
+      <button class="nav-tab-btn active" onclick="switchTab('studio')" id="tab-btn-studio">
+        🎨 3D Studio
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('home')" id="tab-btn-home">
+        🏠 Home
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('services')" id="tab-btn-services">
+        📦 Services
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('gallery')" id="tab-btn-gallery">
+        🖼️ Gallery
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('orders')" id="tab-btn-orders">
+        📋 Orders (<span id="quote-count-badge">0</span>)
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('more')" id="tab-btn-more">
+        ℹ️ About & Contact
+      </button>
+    </nav>
+
+    <div class="header-actions">
+      <a href="https://wa.me/919000000000?text=Hi!%20I'd%20like%20to%20talk%20about%20a%20custom%20print%20order." target="_blank" class="whatsapp-btn">
+        💬 WhatsApp Quote
       </a>
     </div>
   </header>
 
+  <!-- Mobile Bottom Tab Bar -->
+  <nav class="mobile-nav">
+    <button class="mobile-tab-btn active" onclick="switchTab('studio')" id="mob-btn-studio">
+      <span>🎨</span> Studio
+    </button>
+    <button class="mobile-tab-btn" onclick="switchTab('home')" id="mob-btn-home">
+      <span>🏠</span> Home
+    </button>
+    <button class="mobile-tab-btn" onclick="switchTab('services')" id="mob-btn-services">
+      <span>📦</span> Services
+    </button>
+    <button class="mobile-tab-btn" onclick="switchTab('gallery')" id="mob-btn-gallery">
+      <span>🖼️</span> Gallery
+    </button>
+    <button class="mobile-tab-btn" onclick="switchTab('orders')" id="mob-btn-orders">
+      <span>📋</span> Orders
+    </button>
+    <button class="mobile-tab-btn" onclick="switchTab('more')" id="mob-btn-more">
+      <span>ℹ️</span> More
+    </button>
+  </nav>
+
   <main>
-    <section class="hero">
-      <div>
-        <div class="hero-tag">
-          ✦ Festive Apparel 2026 Edition
-        </div>
-        <h1>Custom Prints, <span>Crafted to Perfection</span></h1>
-        <p>
-          High-definition screen printing and DTF apparel customization. Featuring our signature Lord Ganesha "Vinayaka Chavithi" festive graphic on 240 GSM bio-washed combed cotton.
-        </p>
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-          <a href="#showcase" class="btn btn-primary">
-            View Live Mockup
-          </a>
-          <a href="#features" class="btn btn-secondary">
-            Printing Specs
-          </a>
-        </div>
-      </div>
+    <!-- ================= TAB 1: 3D STUDIO ================= -->
+    <section id="view-studio" class="view-panel active container">
+      <span class="section-eyebrow">Interactive Garment Studio</span>
+      <h1 class="section-title">Customize Your T-Shirt</h1>
+      <p class="section-desc">Choose your garment color, select print designs, test real sizes, and get instantaneous bulk pricing.</p>
 
-      <div class="showcase-card" id="showcase">
-        <div class="showcase-img-container">
-          <img 
-            id="mockup-image"
-            src="public/img_ganesha_demo.jpg" 
-            alt="Lord Ganesha Vinayaka Chavithi T-Shirt Print" 
-            class="showcase-img"
-          />
-          <div class="showcase-overlay">
-            <div>
-              <span class="badge-pill">
-                ● LIVE GRAPHIC MOCKUP
-              </span>
-              <h3 style="margin-top: 0.5rem; font-size: 1.15rem;">Lord Ganesha Festive T-Shirt</h3>
-              <p style="color: var(--paper-dim); font-size: 0.85rem;">Vinayaka Chavithi Subhakankshalu Edition</p>
+      <div class="studio-layout">
+        <!-- Interactive Stage -->
+        <div class="studio-canvas-box">
+          <div style="padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--card-soft);">
+            <div style="font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span id="garment-color-name">Pitch Black</span> Cotton Tee
             </div>
-            <div class="view-toggles">
-              <button class="toggle-btn active" onclick="switchView('demo', this)">Garment Mockup</button>
-              <button class="toggle-btn" onclick="switchView('print', this)">High-Res Print</button>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="design-chip active" id="btn-mode-photo" onclick="setStudioMode('photo')">Photo Demo</button>
+              <button class="design-chip" id="btn-mode-vector" onclick="setStudioMode('vector')">Canvas 3D</button>
             </div>
+          </div>
+
+          <div class="canvas-display" id="studio-canvas">
+            <!-- Mode 1: Photo Demo -->
+            <img id="photo-demo-img" src="public/img_ganesha_demo.jpg" alt="Realistic T-shirt Print Demo" style="display: block;">
+
+            <!-- Mode 2: Vector Garment Canvas -->
+            <div class="tshirt-vector-mock" id="vector-canvas" style="display: none;">
+              <svg class="shirt-silhouette" viewBox="0 0 200 240" fill="#111114" id="shirt-svg">
+                <path d="M 60 10 C 75 25 125 25 140 10 L 190 40 L 165 75 L 145 65 L 145 220 L 55 220 L 55 65 L 35 75 L 10 40 Z"/>
+              </svg>
+              <img id="shirt-design-img" class="shirt-print-artwork" src="public/img_ganesha_print.jpg" alt="Design Print">
+              <div id="shirt-design-text" class="shirt-print-text" style="display: none;"></div>
+            </div>
+          </div>
+
+          <div style="padding: 1rem 1.25rem; background: var(--card-soft); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.85rem; color: var(--paper-dim);">240 GSM Bio-Washed Combed Cotton</span>
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--thread);">★ 4x Wash Tested</span>
           </div>
         </div>
 
-        <div class="specs-grid">
-          <div class="spec-item">
-            <h4>Fabric</h4>
-            <p>240 GSM Cotton</p>
+        <!-- Customization Controls -->
+        <div class="controls-panel">
+          <!-- Colors -->
+          <div class="control-group">
+            <h4>1. Select Garment Colour</h4>
+            <div class="color-swatches">
+              <div class="color-swatch active" style="background: #111114;" onclick="selectColor('black', 'Pitch Black', '#111114', this)"></div>
+              <div class="color-swatch" style="background: #F3F1EA;" onclick="selectColor('white', 'Pure White', '#F3F1EA', this)"></div>
+              <div class="color-swatch" style="background: #8A2620;" onclick="selectColor('red', 'Crimson Red', '#8A2620', this)"></div>
+              <div class="color-swatch" style="background: #20344F;" onclick="selectColor('blue', 'Navy Blue', '#20344F', this)"></div>
+              <div class="color-swatch" style="background: #2B3B2E;" onclick="selectColor('green', 'Forest Green', '#2B3B2E', this)"></div>
+              <div class="color-swatch" style="background: #C9A227;" onclick="selectColor('yellow', 'Mustard Gold', '#C9A227', this)"></div>
+            </div>
           </div>
-          <div class="spec-item">
-            <h4>Print Type</h4>
-            <p>DTF & Screen Print</p>
+
+          <!-- Designs -->
+          <div class="control-group">
+            <h4>2. Print Graphic</h4>
+            <div class="designs-chips">
+              <button class="design-chip active" onclick="selectDesign('vinayaka-chavithi', 'Vinayaka Chavithi', this)">Lord Ganesha (Festive)</button>
+              <button class="design-chip" onclick="selectDesign('street-style', 'Street Style', this)">Street Style</button>
+              <button class="design-chip" onclick="selectDesign('college', 'College Batch', this)">College Batch</button>
+              <button class="design-chip" onclick="selectDesign('sports', 'Sports Jersey', this)">Sports Number</button>
+              <button class="design-chip" onclick="selectDesign('minimal-logo', 'Minimal Logo', this)">Minimal Emblem</button>
+            </div>
           </div>
-          <div class="spec-item">
-            <h4>Color</h4>
-            <p>Pitch Black</p>
+
+          <!-- Sizes -->
+          <div class="control-group">
+            <h4>3. Size</h4>
+            <div class="size-chips">
+              <button class="size-chip" onclick="selectSize('S', this)">S</button>
+              <button class="size-chip active" onclick="selectSize('M', this)">M</button>
+              <button class="size-chip" onclick="selectSize('L', this)">L</button>
+              <button class="size-chip" onclick="selectSize('XL', this)">XL</button>
+              <button class="size-chip" onclick="selectSize('XXL', this)">XXL</button>
+            </div>
+          </div>
+
+          <!-- Quantity Stepper -->
+          <div class="control-group">
+            <h4>4. Quantity & Tier Pricing</h4>
+            <div class="qty-stepper">
+              <button class="stepper-btn" onclick="updateQty(-1)">−</button>
+              <span class="stepper-val" id="qty-val">1</span>
+              <button class="stepper-btn" onclick="updateQty(1)">+</button>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--paper-muted); margin-top: 0.5rem;">
+              Tier discounts: 10+ (10% off) • 50+ (20% off) • 200+ (30% off)
+            </p>
+          </div>
+
+          <!-- Estimated Total -->
+          <div class="price-box">
+            <div class="price-row">
+              <div>
+                <span style="font-size: 0.8rem; color: var(--paper-dim); text-transform: uppercase;">Estimated Price</span>
+                <div class="total-price" id="total-price-display">₹499</div>
+                <div style="font-size: 0.8rem; color: var(--paper-muted);" id="unit-price-display">₹499 per unit</div>
+              </div>
+              <button class="hero-btn hero-btn-primary" onclick="saveQuote()">
+                Save Quote 📋
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="features-section" id="features">
-      <div style="text-align: center; margin-bottom: 2.5rem;">
-        <h2 style="font-size: 2rem; font-weight: 800; letter-spacing: -0.5px;">Premium Apparel Printing Features</h2>
-        <p style="color: var(--paper-dim); margin-top: 0.5rem;">Engineered for durability, vibrancy, and soft hand feel</p>
+    <!-- ================= TAB 2: HOME ================= -->
+    <section id="view-home" class="view-panel container">
+      <div class="home-hero">
+        <div>
+          <span class="section-eyebrow">✦ Premium Custom Apparel</span>
+          <h1 style="font-size: 3.2rem; font-weight: 800; line-height: 1.15; margin-bottom: 1.25rem;">
+            WEAR YOUR <span style="background: linear-gradient(135deg, #FFB703, #FF8A00); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">IDEAS.</span>
+          </h1>
+          <p class="section-desc">
+            Premium custom T-shirt printing for events, colleges, corporate teams, and festive drops. Featuring our signature Lord Ganesha "Vinayaka Chavithi" artwork on heavy combed cotton.
+          </p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <button class="hero-btn hero-btn-primary" onclick="switchTab('studio')">
+              Open 3D Studio
+            </button>
+            <button class="hero-btn hero-btn-secondary" onclick="switchTab('services')">
+              View Services
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div style="background: var(--card); border: 1px solid var(--border); border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            <img src="public/img_ganesha_demo.jpg" alt="Vinayaka Chavithi Edition T-Shirt" style="width: 100%; height: 380px; object-fit: cover;">
+            <div style="padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; background: var(--card-soft);">
+              <div>
+                <h3 style="font-size: 1.1rem; font-weight: 700;">Vinayaka Chavithi Edition</h3>
+                <p style="color: var(--paper-dim); font-size: 0.85rem;">Screen Printed on 240 GSM Pitch Black Cotton</p>
+              </div>
+              <button class="hero-btn hero-btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="switchTab('studio')">
+                Customize
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">✨</div>
-          <h3>Ultra High-Density Inks</h3>
-          <p>Multi-layer screen print technique with metallic gold and saffron amber pigment for vibrant detailing that doesn't fade.</p>
+      <!-- Why Choose Us Ribbon -->
+      <div class="stats-ribbon">
+        <div class="stat-card">
+          <div class="stat-val">4×</div>
+          <div class="stat-label">Wash-tested prints</div>
+          <div class="stat-sub">Color holds through repeated wash cycles without cracking.</div>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">🛡️</div>
-          <h3>100% Bio-Washed Combed Cotton</h3>
-          <p>Heavyweight 240 GSM fabric pre-shrunk and bio-washed for an ultra-smooth touch and long-lasting shape retention.</p>
+        <div class="stat-card">
+          <div class="stat-val">100%</div>
+          <div class="stat-label">Bio-Washed Cotton</div>
+          <div class="stat-sub">Heavyweight 240 GSM fabric selected for supreme drape.</div>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3>3D Angle Real-Time Preview</h3>
-          <p>Interactive multi-perspective preview with 360° visual rotation and instant custom size and color swatches.</p>
+        <div class="stat-card">
+          <div class="stat-val">72h</div>
+          <div class="stat-label">Fast turnaround</div>
+          <div class="stat-sub">Standard batches dispatched within three business days.</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">6</div>
+          <div class="stat-label">Print Methods</div>
+          <div class="stat-sub">Screen, DTF, embroidery, vinyl, sublimation, & puff print.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 3: SERVICES ================= -->
+    <section id="view-services" class="view-panel container">
+      <span class="section-eyebrow">What We Do</span>
+      <h1 class="section-title">Specialized Printing Services</h1>
+      <p class="section-desc">From single custom statements to 5,000-piece college fests and corporate drops.</p>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-tag">01 / APPAREL</div>
+          <h3>Custom T-Shirts</h3>
+          <p>One-off tees for personal projects, gifts, or a design you just need to see printed with deep color fidelity.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-tag">02 / EVENTS</div>
+          <h3>College & Fest Batches</h3>
+          <p>Batch tees, cultural fests, and farewell drops with coordinated sizes, fast turnaround, and bulk savings.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-tag">03 / CORPORATE</div>
+          <h3>Corporate Merch & Wear</h3>
+          <p>On-brand uniforms and company merch that hold up to daily wear and washes without fading.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-tag">04 / ATHLETICS</div>
+          <h3>Sports Jerseys</h3>
+          <p>Numbered, named, and printed on performance stretch fabrics — built to survive the season.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-tag">05 / MANUFACTURING</div>
+          <h3>Bulk Screen Printing</h3>
+          <p>500 pieces or 5,000 — identical quality control on every unit, priced with volume curve discounts.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-tag">06 / CREATIVE</div>
+          <h3>Custom Artwork Vectorizing</h3>
+          <p>Have a rough sketch or reference? Our in-house designers create print-ready vector separations.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 4: GALLERY ================= -->
+    <section id="view-gallery" class="view-panel container">
+      <span class="section-eyebrow">Portfolio & Drops</span>
+      <h1 class="section-title">Design Gallery</h1>
+      <p class="section-desc">Explore recent client prints across events, streetwear, college batches, and sports.</p>
+
+      <div class="gallery-grid">
+        <!-- Featured Vinayaka Chavithi -->
+        <div class="gallery-card" style="grid-column: span 2;" onclick="switchTab('studio')">
+          <div class="gallery-preview" style="height: 280px;">
+            <img src="public/img_ganesha_demo.jpg" alt="Vinayaka Chavithi Festive Edition" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div class="gallery-info" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <span class="service-tag">FEATURED EVENT DROP</span>
+              <h4>Vinayaka Chavithi Festive Edition</h4>
+              <p>Metallic Gold pigment & Screen Print on Pitch Black Combed Cotton</p>
+            </div>
+            <button class="hero-btn hero-btn-primary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Customize</button>
+          </div>
+        </div>
+
+        <div class="gallery-card" onclick="switchTab('studio')">
+          <div class="gallery-preview" style="background: linear-gradient(135deg, #1C1D22, #3A1614);">
+            <div style="font-size: 3rem;">🔥</div>
+          </div>
+          <div class="gallery-info">
+            <span class="service-tag">STREETWEAR</span>
+            <h4>Oversized Drop '26</h4>
+            <p>Boxy fit, puff print typography.</p>
+          </div>
+        </div>
+
+        <div class="gallery-card" onclick="switchTab('studio')">
+          <div class="gallery-preview" style="background: linear-gradient(135deg, #1B1F2B, #2C2413);">
+            <div style="font-size: 3rem;">🎓</div>
+          </div>
+          <div class="gallery-info">
+            <span class="service-tag">COLLEGE</span>
+            <h4>Fest Batch 2026</h4>
+            <p>180 coordinated batch tees.</p>
+          </div>
+        </div>
+
+        <div class="gallery-card" onclick="switchTab('studio')">
+          <div class="gallery-preview" style="background: linear-gradient(135deg, #1A1F18, #0F2A1C);">
+            <div style="font-size: 3rem;">⚽</div>
+          </div>
+          <div class="gallery-info">
+            <span class="service-tag">SPORTS</span>
+            <h4>League Soccer Kit</h4>
+            <p>Sublimation jersey with custom numbers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 5: ORDERS ================= -->
+    <section id="view-orders" class="view-panel container">
+      <span class="section-eyebrow">Your Estimates</span>
+      <h1 class="section-title">Saved Quotes & Orders</h1>
+      <p class="section-desc">Review your configured t-shirt quotes and dispatch them directly via WhatsApp.</p>
+
+      <div id="quotes-container" class="quotes-list">
+        <!-- Quotes will be inserted dynamically -->
+      </div>
+    </section>
+
+    <!-- ================= TAB 6: ABOUT & CONTACT ================= -->
+    <section id="view-more" class="view-panel container">
+      <span class="section-eyebrow">Vizianagaram Print House</span>
+      <h1 class="section-title">About ThreadCraft & Contact</h1>
+      <p class="section-desc">Direct communication, verified customer reviews, and frequently asked questions.</p>
+
+      <!-- Contact Actions -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
+        <a href="https://wa.me/919000000000" target="_blank" class="stat-card" style="text-decoration: none; display: block;">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">💬</div>
+          <div class="stat-label">WhatsApp</div>
+          <div class="stat-sub">+91 90000 00000</div>
+        </a>
+        <a href="tel:+919000000000" class="stat-card" style="text-decoration: none; display: block;">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📞</div>
+          <div class="stat-label">Phone Support</div>
+          <div class="stat-sub">+91 90000 00000</div>
+        </a>
+        <div class="stat-card">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📍</div>
+          <div class="stat-label">Location</div>
+          <div class="stat-sub">Vizianagaram, Andhra Pradesh</div>
+        </div>
+        <div class="stat-card">
+          <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📸</div>
+          <div class="stat-label">Instagram</div>
+          <div class="stat-sub">@threadcraft.demo</div>
+        </div>
+      </div>
+
+      <!-- FAQ Accordion -->
+      <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 1.25rem;">Frequently Asked Questions</h3>
+      <div class="faq-list">
+        <div class="faq-card open" onclick="this.classList.toggle('open')">
+          <div class="faq-question">
+            <span>What's the minimum order size?</span>
+            <span>↕</span>
+          </div>
+          <div class="faq-answer">
+            There isn't one! We print single custom tees for personal projects as well as batches of several thousand for corporate and college runs.
+          </div>
+        </div>
+
+        <div class="faq-card" onclick="this.classList.toggle('open')">
+          <div class="faq-question">
+            <span>How long does printing take?</span>
+            <span>↕</span>
+          </div>
+          <div class="faq-answer">
+            Standard orders leave the shop within 72 hours. Larger bulk orders are scheduled based on your event date.
+          </div>
+        </div>
+
+        <div class="faq-card" onclick="this.classList.toggle('open')">
+          <div class="faq-question">
+            <span>Can I see a sample before bulk printing?</span>
+            <span>↕</span>
+          </div>
+          <div class="faq-answer">
+            Yes! For bulk and corporate orders, we print a sample piece first so you can inspect color, fit, and print quality before the full batch runs.
+          </div>
+        </div>
+
+        <div class="faq-card" onclick="this.classList.toggle('open')">
+          <div class="faq-question">
+            <span>Do you deliver outside Vizianagaram?</span>
+            <span>↕</span>
+          </div>
+          <div class="faq-answer">
+            Yes, we ship across Andhra Pradesh and all over India with express tracking.
+          </div>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <p>© 2026 ThreadCraft Custom Apparel Studio. All rights reserved.</p>
+    <p>© 2026 ThreadCraft Custom Apparel Studio • Built with Jetpack Compose & Web Portal</p>
   </footer>
 
   <script>
-    function switchView(type, btn) {
-      const img = document.getElementById('mockup-image');
-      const buttons = document.querySelectorAll('.toggle-btn');
-      buttons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+    // App State
+    let currentTab = 'studio';
+    let selectedColor = { id: 'black', name: 'Pitch Black', hex: '#111114' };
+    let selectedDesign = { id: 'vinayaka-chavithi', name: 'Vinayaka Chavithi' };
+    let selectedSize = 'M';
+    let qty = 1;
+    let savedQuotes = [
+      {
+        id: 1,
+        color: 'Pitch Black',
+        design: 'Vinayaka Chavithi (Festive)',
+        size: 'L',
+        qty: 25,
+        total: '₹11,225',
+        unit: '₹449'
+      }
+    ];
 
-      if (type === 'demo') {
-        img.src = 'public/img_ganesha_demo.jpg';
-        img.style.objectFit = 'cover';
+    // Navigation Switcher
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      const activePanel = document.getElementById('view-' + tabId);
+      if (activePanel) activePanel.classList.add('active');
+
+      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById('tab-btn-' + tabId);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      document.querySelectorAll('.mobile-tab-btn').forEach(b => b.classList.remove('active'));
+      const activeMobBtn = document.getElementById('mob-btn-' + tabId);
+      if (activeMobBtn) activeMobBtn.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Studio Customizer Functions
+    function setStudioMode(mode) {
+      const btnPhoto = document.getElementById('btn-mode-photo');
+      const btnVector = document.getElementById('btn-mode-vector');
+      const photoImg = document.getElementById('photo-demo-img');
+      const vectorCanvas = document.getElementById('vector-canvas');
+
+      if (mode === 'photo') {
+        btnPhoto.classList.add('active');
+        btnVector.classList.remove('active');
+        photoImg.style.display = 'block';
+        vectorCanvas.style.display = 'none';
       } else {
-        img.src = 'public/img_ganesha_print.jpg';
-        img.style.objectFit = 'contain';
+        btnVector.classList.add('active');
+        btnPhoto.classList.remove('active');
+        photoImg.style.display = 'none';
+        vectorCanvas.style.display = 'flex';
       }
     }
+
+    function selectColor(id, name, hex, el) {
+      selectedColor = { id, name, hex };
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('garment-color-name').innerText = name;
+      document.getElementById('shirt-svg').setAttribute('fill', hex);
+    }
+
+    function selectDesign(id, name, el) {
+      selectedDesign = { id, name };
+      document.querySelectorAll('.designs-chips .design-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+
+      const img = document.getElementById('shirt-design-img');
+      const text = document.getElementById('shirt-design-text');
+
+      if (id === 'vinayaka-chavithi') {
+        img.style.display = 'block';
+        img.src = 'public/img_ganesha_print.jpg';
+        text.style.display = 'none';
+        document.getElementById('photo-demo-img').src = 'public/img_ganesha_demo.jpg';
+      } else {
+        img.style.display = 'none';
+        text.style.display = 'block';
+        text.innerText = name.toUpperCase();
+        text.style.color = '#F4B14A';
+      }
+    }
+
+    function selectSize(size, el) {
+      selectedSize = size;
+      document.querySelectorAll('.size-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function updateQty(delta) {
+      qty = Math.max(1, qty + delta);
+      document.getElementById('qty-val').innerText = qty;
+      calculatePrice();
+    }
+
+    function calculatePrice() {
+      let discount = 0;
+      if (qty >= 200) discount = 0.30;
+      else if (qty >= 50) discount = 0.20;
+      else if (qty >= 10) discount = 0.10;
+
+      const base = 499;
+      const unit = Math.round(base * (1 - discount));
+      const total = unit * qty;
+
+      document.getElementById('total-price-display').innerText = '₹' + total.toLocaleString('en-IN');
+      document.getElementById('unit-price-display').innerText = '₹' + unit.toLocaleString('en-IN') + ' per unit' + (discount > 0 ? ` (${discount * 100}% off)` : '');
+    }
+
+    function saveQuote() {
+      let discount = 0;
+      if (qty >= 200) discount = 0.30;
+      else if (qty >= 50) discount = 0.20;
+      else if (qty >= 10) discount = 0.10;
+      const unit = Math.round(499 * (1 - discount));
+      const total = unit * qty;
+
+      savedQuotes.unshift({
+        id: Date.now(),
+        color: selectedColor.name,
+        design: selectedDesign.name,
+        size: selectedSize,
+        qty: qty,
+        total: '₹' + total.toLocaleString('en-IN'),
+        unit: '₹' + unit.toLocaleString('en-IN')
+      });
+      renderQuotes();
+      switchTab('orders');
+    }
+
+    function renderQuotes() {
+      const container = document.getElementById('quotes-container');
+      const badge = document.getElementById('quote-count-badge');
+      badge.innerText = savedQuotes.length;
+
+      if (savedQuotes.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 3rem; background: var(--card); border-radius: 18px; border: 1px solid var(--border);">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📋</div>
+            <h3>No saved quotes yet</h3>
+            <p style="color: var(--paper-dim); margin: 0.5rem 0 1.5rem;">Configure your garment in the 3D studio and save your quote.</p>
+            <button class="hero-btn hero-btn-primary" onclick="switchTab('studio')">Go to 3D Studio</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = savedQuotes.map(q => `
+        <div class="quote-item">
+          <div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--thread); margin-bottom: 0.25rem;">
+              SAVED CONFIGURATION
+            </div>
+            <h3 style="font-size: 1.15rem; font-weight: 700;">${q.qty}× ${q.color} Tee (${q.size})</h3>
+            <p style="color: var(--paper-dim); font-size: 0.85rem;">Print: ${q.design} • Unit: ${q.unit}</p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div style="font-size: 1.5rem; font-weight: 800; color: var(--paper);">${q.total}</div>
+            <a href="https://wa.me/919000000000?text=Hi!%20I'd%20like%20to%20place%20an%20order%20for%20${q.qty}%20units%20of%20${q.color}%20(${q.size})%20with%20design%20${q.design}.%20Total:%20${q.total}" target="_blank" class="hero-btn hero-btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+              WhatsApp Order 💬
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Initialize
+    calculatePrice();
+    renderQuotes();
   </script>
 </body>
 </html>
