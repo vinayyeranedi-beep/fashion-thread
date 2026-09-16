@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThreadCraft — Custom T-Shirt Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0B0A0C;
+      --card: #151418;
+      --card-soft: #1B1A20;
+      --border: #28262E;
+      --paper: #FAF8F5;
+      --paper-dim: #9C98A6;
+      --thread: #FF8A00;
+      --signal: #E53935;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--paper);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(11, 10, 12, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .brand-badge {
+      background: linear-gradient(135deg, var(--thread), #FFB703);
+      color: #000;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      letter-spacing: 1px;
+    }
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .btn {
+      padding: 0.6rem 1.25rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.875rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-primary {
+      background: var(--thread);
+      color: #000;
+      border: none;
+    }
+    .btn-primary:hover {
+      background: #FFA033;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: var(--card-soft);
+      color: var(--paper);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--paper-dim);
+    }
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 2.5rem 1.5rem;
+      }
+    }
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 138, 0, 0.1);
+      border: 1px solid rgba(255, 138, 0, 0.3);
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--thread);
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      letter-spacing: -1px;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, #FFB703, #FF8A00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      color: var(--paper-dim);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    .showcase-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+    .showcase-img-container {
+      position: relative;
+      width: 100%;
+      height: 440px;
+      background: #000;
+    }
+    .showcase-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.3s ease;
+    }
+    .showcase-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.4), transparent);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .badge-pill {
+      background: rgba(11, 10, 12, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--thread);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .view-toggles {
+      display: flex;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 3px;
+      gap: 4px;
+    }
+    .toggle-btn {
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--paper-dim);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .toggle-btn.active {
+      background: var(--thread);
+      color: #000;
+    }
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 1.25rem 1.5rem;
+      background: var(--card-soft);
+      border-top: 1px solid var(--border);
+      gap: 1rem;
+    }
+    .spec-item h4 {
+      font-size: 0.75rem;
+      color: var(--paper-dim);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
+    .spec-item p {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--paper);
+    }
+    .features-section {
+      max-width: 1200px;
+      margin: 2rem auto 4rem;
+      padding: 0 2rem;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.75rem;
+    }
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(255, 138, 0, 0.12);
+      border: 1px solid rgba(255, 138, 0, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--thread);
+      font-size: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .feature-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .feature-card p {
+      color: var(--paper-dim);
+      font-size: 0.925rem;
+      line-height: 1.6;
+    }
+    footer {
+      margin-top: auto;
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--paper-dim);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-badge">PRO</div>
+      <div class="brand-title">ThreadCraft</div>
+    </div>
+    <div class="nav-links">
+      <a href="https://github.com/vinayyeranedi-beep/fashion-thread" target="_blank" class="btn btn-secondary">
+        GitHub Repo
+      </a>
+      <a href="#customizer" class="btn btn-primary">
+        Explore Studio
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="hero-tag">
+          ✦ Festive Apparel 2026 Edition
+        </div>
+        <h1>Custom Prints, <span>Crafted to Perfection</span></h1>
+        <p>
+          High-definition screen printing and DTF apparel customization. Featuring our signature Lord Ganesha "Vinayaka Chavithi" festive graphic on 240 GSM bio-washed combed cotton.
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <a href="#showcase" class="btn btn-primary">
+            View Live Mockup
+          </a>
+          <a href="#features" class="btn btn-secondary">
+            Printing Specs
+          </a>
+        </div>
+      </div>
+
+      <div class="showcase-card" id="showcase">
+        <div class="showcase-img-container">
+          <img 
+            id="mockup-image"
+            src="public/img_ganesha_demo.jpg" 
+            alt="Lord Ganesha Vinayaka Chavithi T-Shirt Print" 
+            class="showcase-img"
+          />
+          <div class="showcase-overlay">
+            <div>
+              <span class="badge-pill">
+                ● LIVE GRAPHIC MOCKUP
+              </span>
+              <h3 style="margin-top: 0.5rem; font-size: 1.15rem;">Lord Ganesha Festive T-Shirt</h3>
+              <p style="color: var(--paper-dim); font-size: 0.85rem;">Vinayaka Chavithi Subhakankshalu Edition</p>
+            </div>
+            <div class="view-toggles">
+              <button class="toggle-btn active" onclick="switchView('demo', this)">Garment Mockup</button>
+              <button class="toggle-btn" onclick="switchView('print', this)">High-Res Print</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="specs-grid">
+          <div class="spec-item">
+            <h4>Fabric</h4>
+            <p>240 GSM Cotton</p>
+          </div>
+          <div class="spec-item">
+            <h4>Print Type</h4>
+            <p>DTF & Screen Print</p>
+          </div>
+          <div class="spec-item">
+            <h4>Color</h4>
+            <p>Pitch Black</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section" id="features">
+      <div style="text-align: center; margin-bottom: 2.5rem;">
+        <h2 style="font-size: 2rem; font-weight: 800; letter-spacing: -0.5px;">Premium Apparel Printing Features</h2>
+        <p style="color: var(--paper-dim); margin-top: 0.5rem;">Engineered for durability, vibrancy, and soft hand feel</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">✨</div>
+          <h3>Ultra High-Density Inks</h3>
+          <p>Multi-layer screen print technique with metallic gold and saffron amber pigment for vibrant detailing that doesn't fade.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>100% Bio-Washed Combed Cotton</h3>
+          <p>Heavyweight 240 GSM fabric pre-shrunk and bio-washed for an ultra-smooth touch and long-lasting shape retention.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>3D Angle Real-Time Preview</h3>
+          <p>Interactive multi-perspective preview with 360° visual rotation and instant custom size and color swatches.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 ThreadCraft Custom Apparel Studio. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function switchView(type, btn) {
+      const img = document.getElementById('mockup-image');
+      const buttons = document.querySelectorAll('.toggle-btn');
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (type === 'demo') {
+        img.src = 'public/img_ganesha_demo.jpg';
+        img.style.objectFit = 'cover';
+      } else {
+        img.src = 'public/img_ganesha_print.jpg';
+        img.style.objectFit = 'contain';
+      }
+    }
+  </script>
+</body>
+</html>
