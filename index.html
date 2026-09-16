@@ -295,10 +295,10 @@
       font-size: 0.85rem;
     }
 
-    /* Interactive 3D Studio Mockup Stage */
+    /* 3D Studio Mockup Stage */
     .studio-layout {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.15fr 0.85fr;
       gap: 2.5rem;
     }
     @media (max-width: 960px) {
@@ -313,6 +313,8 @@
       overflow: hidden;
       position: relative;
       box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
     }
     .canvas-display {
       height: 480px;
@@ -320,53 +322,73 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle at center, #1F1D24 0%, #0D0C0F 100%);
+      background: radial-gradient(circle at center, #201E26 0%, #0D0C0F 100%);
       overflow: hidden;
-      transition: background 0.3s;
+      cursor: grab;
+      user-select: none;
     }
-    .canvas-display img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+    .canvas-display:active {
+      cursor: grabbing;
     }
-    .tshirt-vector-mock {
+
+    /* Realistic Garment Container */
+    .tshirt-3d-stage {
       position: relative;
       width: 320px;
-      height: 380px;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 800px;
+    }
+    .tshirt-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .shirt-silhouette {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+
+    /* Silhouette Shape */
+    .tshirt-svg {
+      width: 320px;
+      height: 380px;
+      filter: drop-shadow(0 25px 30px rgba(0,0,0,0.7));
       transition: fill 0.3s ease;
     }
-    .shirt-print-artwork {
+    
+    /* Artwork Placement on Chest */
+    .chest-print-layer {
       position: absolute;
       top: 30%;
       left: 50%;
       transform: translateX(-50%);
-      width: 150px;
-      height: 150px;
-      object-fit: contain;
+      width: 140px;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
       z-index: 10;
-      border-radius: 8px;
+      transition: opacity 0.3s ease, transform 0.2s ease;
     }
-    .shirt-print-text {
-      position: absolute;
-      top: 38%;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      z-index: 10;
+    .chest-print-layer img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+    }
+    .chest-print-text {
       font-family: 'JetBrains Mono', monospace;
+      font-size: 1.15rem;
       font-weight: 800;
-      font-size: 1.1rem;
-      letter-spacing: 1px;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-align: center;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
     }
 
     /* Studio Controls Panel */
@@ -386,6 +408,9 @@
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .color-swatches {
       display: flex;
@@ -393,16 +418,21 @@
       flex-wrap: wrap;
     }
     .color-swatch {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       cursor: pointer;
       border: 2px solid transparent;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
       transition: transform 0.2s, border-color 0.2s;
+    }
+    .color-swatch:hover {
+      transform: scale(1.1);
     }
     .color-swatch.active {
       border-color: #FFF;
-      transform: scale(1.15);
+      transform: scale(1.18);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
     }
     .designs-chips {
       display: flex;
@@ -420,10 +450,15 @@
       cursor: pointer;
       transition: all 0.2s;
     }
+    .design-chip:hover {
+      color: var(--paper);
+      border-color: var(--paper-dim);
+    }
     .design-chip.active {
       background: var(--thread);
       color: #000;
       border-color: var(--thread);
+      font-weight: 700;
     }
     .size-chips {
       display: flex;
@@ -444,9 +479,13 @@
       cursor: pointer;
       transition: all 0.2s;
     }
+    .size-chip:hover {
+      border-color: var(--paper-dim);
+    }
     .size-chip.active {
       background: var(--signal);
       border-color: var(--signal);
+      box-shadow: 0 4px 12px rgba(229, 57, 53, 0.35);
     }
     .qty-stepper {
       display: flex;
@@ -471,6 +510,9 @@
       align-items: center;
       justify-content: center;
     }
+    .stepper-btn:hover {
+      background: var(--border);
+    }
     .stepper-val {
       font-weight: 800;
       font-size: 1.1rem;
@@ -493,6 +535,31 @@
       font-size: 1.8rem;
       font-weight: 800;
       color: var(--thread);
+    }
+
+    /* View Switch Pill */
+    .view-pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 3px;
+      display: flex;
+      gap: 4px;
+    }
+    .pill-btn {
+      background: transparent;
+      border: none;
+      color: var(--paper-dim);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .pill-btn.active {
+      background: var(--signal);
+      color: #FFF;
     }
 
     /* Services Grid */
@@ -531,13 +598,6 @@
     }
 
     /* Gallery Grid */
-    .gallery-filter-bar {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-      overflow-x: auto;
-      padding-bottom: 0.5rem;
-    }
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -625,6 +685,28 @@
       display: block;
     }
 
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--thread);
+      color: #000;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
     /* Footer */
     footer {
       border-top: 1px solid var(--border);
@@ -641,9 +723,9 @@
 
   <!-- Top Navigation Header with all 6 Tabs -->
   <header>
-    <div class="brand" onclick="switchTab('home')">
+    <div class="brand" onclick="switchTab('studio')">
       <div class="brand-logo">THREADCRAFT</div>
-      <div class="brand-badge">DEMO</div>
+      <div class="brand-badge">STUDIO</div>
     </div>
 
     <!-- All Primary Options / Navigation Views -->
@@ -700,34 +782,99 @@
   <main>
     <!-- ================= TAB 1: 3D STUDIO ================= -->
     <section id="view-studio" class="view-panel active container">
-      <span class="section-eyebrow">Interactive Garment Studio</span>
+      <span class="section-eyebrow">✦ Interactive 3D Studio & Garment Customizer</span>
       <h1 class="section-title">Customize Your T-Shirt</h1>
-      <p class="section-desc">Choose your garment color, select print designs, test real sizes, and get instantaneous bulk pricing.</p>
+      <p class="section-desc">Drag or rotate the shirt 360°, switch garment colors, test print graphics, and calculate volume discounts.</p>
 
       <div class="studio-layout">
         <!-- Interactive Stage -->
         <div class="studio-canvas-box">
           <div style="padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); background: var(--card-soft);">
             <div style="font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
-              <span id="garment-color-name">Pitch Black</span> Cotton Tee
+              <span id="garment-color-name">Pitch Black</span> Cotton Tee (<span id="view-face-name">Front View</span>)
             </div>
-            <div style="display: flex; gap: 0.5rem;">
-              <button class="design-chip active" id="btn-mode-photo" onclick="setStudioMode('photo')">Photo Demo</button>
-              <button class="design-chip" id="btn-mode-vector" onclick="setStudioMode('vector')">Canvas 3D</button>
+
+            <!-- Front / Back Switch & Auto-Rotate -->
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <div class="view-pill">
+                <button class="pill-btn active" id="btn-face-front" onclick="setViewFace('front')">Front</button>
+                <button class="pill-btn" id="btn-face-back" onclick="setViewFace('back')">Back</button>
+              </div>
+              <button class="pill-btn" id="btn-auto-rotate" onclick="toggleAutoRotate()" style="background: var(--card); border: 1px solid var(--border);">
+                🔄 360° Spin
+              </button>
             </div>
           </div>
 
-          <div class="canvas-display" id="studio-canvas">
-            <!-- Mode 1: Photo Demo -->
-            <img id="photo-demo-img" src="public/img_ganesha_demo.jpg" alt="Realistic T-shirt Print Demo" style="display: block;">
+          <!-- Canvas Stage where User Drags / Rotates the Shirt -->
+          <div class="canvas-display" id="studio-canvas" title="Drag with mouse or touch to rotate 360°">
+            <div class="tshirt-3d-stage">
+              <div class="tshirt-wrapper" id="tshirt-wrapper">
+                <!-- SVG Vector Shirt with Realistic Contours -->
+                <svg class="tshirt-svg" viewBox="0 0 320 380" id="shirt-svg">
+                  <!-- Garment Shadow/Base -->
+                  <defs>
+                    <linearGradient id="fabricShading" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#000000" stop-opacity="0.3"/>
+                      <stop offset="25%" stop-color="#ffffff" stop-opacity="0.08"/>
+                      <stop offset="50%" stop-color="#ffffff" stop-opacity="0"/>
+                      <stop offset="75%" stop-color="#000000" stop-opacity="0.1"/>
+                      <stop offset="100%" stop-color="#000000" stop-opacity="0.4"/>
+                    </linearGradient>
+                  </defs>
 
-            <!-- Mode 2: Vector Garment Canvas -->
-            <div class="tshirt-vector-mock" id="vector-canvas" style="display: none;">
-              <svg class="shirt-silhouette" viewBox="0 0 200 240" fill="#111114" id="shirt-svg">
-                <path d="M 60 10 C 75 25 125 25 140 10 L 190 40 L 165 75 L 145 65 L 145 220 L 55 220 L 55 65 L 35 75 L 10 40 Z"/>
-              </svg>
-              <img id="shirt-design-img" class="shirt-print-artwork" src="public/img_ganesha_print.jpg" alt="Design Print">
-              <div id="shirt-design-text" class="shirt-print-text" style="display: none;"></div>
+                  <!-- T-shirt Body Path -->
+                  <path id="shirt-body-path" fill="#111114" d="
+                    M 110,35
+                    C 130,55 190,55 210,35
+                    L 275,70
+                    L 245,125
+                    L 215,110
+                    L 215,350
+                    C 215,355 210,360 205,360
+                    L 115,360
+                    C 110,360 105,355 105,350
+                    L 105,110
+                    L 75,125
+                    L 45,70
+                    Z
+                  " />
+
+                  <!-- Shading Overlay for Fabric Depth -->
+                  <path fill="url(#fabricShading)" d="
+                    M 110,35
+                    C 130,55 190,55 210,35
+                    L 275,70
+                    L 245,125
+                    L 215,110
+                    L 215,350
+                    L 105,350
+                    L 105,110
+                    L 75,125
+                    L 45,70
+                    Z
+                  " />
+
+                  <!-- Ribbed Collar Rim -->
+                  <path id="shirt-collar-path" fill="#0B0C10" d="
+                    M 110,35
+                    C 130,60 190,60 210,35
+                    C 190,50 130,50 110,35
+                    Z
+                  " />
+                </svg>
+
+                <!-- Chest Print Artwork -->
+                <div class="chest-print-layer" id="chest-print-layer">
+                  <img id="print-image" src="public/img_ganesha_print.jpg" alt="Selected Graphic Print">
+                  <div id="print-custom-text" class="chest-print-text" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hint overlay -->
+            <div style="position: absolute; bottom: 12px; left: 16px; font-size: 0.75rem; color: var(--paper-dim); background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 999px; pointer-events: none;">
+              👆 Drag horizontally to rotate garment
             </div>
           </div>
 
@@ -739,34 +886,61 @@
 
         <!-- Customization Controls -->
         <div class="controls-panel">
-          <!-- Colors -->
+          <!-- 1. Color Palette -->
           <div class="control-group">
-            <h4>1. Select Garment Colour</h4>
+            <h4>
+              <span>1. Fabric Colour</span>
+              <span id="selected-color-tag" style="color: var(--thread); font-size: 0.75rem;">Pitch Black</span>
+            </h4>
             <div class="color-swatches">
-              <div class="color-swatch active" style="background: #111114;" onclick="selectColor('black', 'Pitch Black', '#111114', this)"></div>
-              <div class="color-swatch" style="background: #F3F1EA;" onclick="selectColor('white', 'Pure White', '#F3F1EA', this)"></div>
-              <div class="color-swatch" style="background: #8A2620;" onclick="selectColor('red', 'Crimson Red', '#8A2620', this)"></div>
-              <div class="color-swatch" style="background: #20344F;" onclick="selectColor('blue', 'Navy Blue', '#20344F', this)"></div>
-              <div class="color-swatch" style="background: #2B3B2E;" onclick="selectColor('green', 'Forest Green', '#2B3B2E', this)"></div>
-              <div class="color-swatch" style="background: #C9A227;" onclick="selectColor('yellow', 'Mustard Gold', '#C9A227', this)"></div>
+              <div class="color-swatch active" style="background: #111114;" onclick="selectColor('black', 'Pitch Black', '#111114', this)" title="Pitch Black"></div>
+              <div class="color-swatch" style="background: #F3F1EA;" onclick="selectColor('white', 'Pure White', '#F3F1EA', this)" title="Pure White"></div>
+              <div class="color-swatch" style="background: #8A2620;" onclick="selectColor('red', 'Crimson Red', '#8A2620', this)" title="Crimson Red"></div>
+              <div class="color-swatch" style="background: #20344F;" onclick="selectColor('blue', 'Navy Blue', '#20344F', this)" title="Navy Blue"></div>
+              <div class="color-swatch" style="background: #2B3B2E;" onclick="selectColor('green', 'Forest Green', '#2B3B2E', this)" title="Forest Green"></div>
+              <div class="color-swatch" style="background: #C9A227;" onclick="selectColor('yellow', 'Mustard Gold', '#C9A227', this)" title="Mustard Gold"></div>
             </div>
           </div>
 
-          <!-- Designs -->
+          <!-- 2. Designs -->
           <div class="control-group">
-            <h4>2. Print Graphic</h4>
+            <h4>
+              <span>2. Print Graphic</span>
+              <span id="selected-design-tag" style="color: var(--thread); font-size: 0.75rem;">Vinayaka Chavithi</span>
+            </h4>
             <div class="designs-chips">
-              <button class="design-chip active" onclick="selectDesign('vinayaka-chavithi', 'Vinayaka Chavithi', this)">Lord Ganesha (Festive)</button>
-              <button class="design-chip" onclick="selectDesign('street-style', 'Street Style', this)">Street Style</button>
-              <button class="design-chip" onclick="selectDesign('college', 'College Batch', this)">College Batch</button>
-              <button class="design-chip" onclick="selectDesign('sports', 'Sports Jersey', this)">Sports Number</button>
-              <button class="design-chip" onclick="selectDesign('minimal-logo', 'Minimal Logo', this)">Minimal Emblem</button>
+              <button class="design-chip active" onclick="selectDesign('vinayaka-chavithi', 'Vinayaka Chavithi (Festive)', this)">
+                Lord Ganesha (Festive)
+              </button>
+              <button class="design-chip" onclick="selectDesign('street-style', 'Street Style 2026', this)">
+                Street Style
+              </button>
+              <button class="design-chip" onclick="selectDesign('college', 'College Batch \'26', this)">
+                College Batch
+              </button>
+              <button class="design-chip" onclick="selectDesign('sports', 'Sports Number 07', this)">
+                Sports Jersey
+              </button>
+              <button class="design-chip" onclick="selectDesign('minimal-logo', 'Minimal Emblem', this)">
+                Minimal Logo
+              </button>
+            </div>
+
+            <!-- Custom User Artwork Upload -->
+            <div style="margin-top: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+              <input type="file" id="upload-custom-file" accept="image/*" style="display: none;" onchange="handleCustomUpload(event)">
+              <button class="pill-btn" onclick="document.getElementById('upload-custom-file').click()" style="background: var(--card-soft); border: 1px dashed var(--thread); color: var(--thread); padding: 0.4rem 0.9rem;">
+                📁 Upload Custom Image/Logo
+              </button>
             </div>
           </div>
 
-          <!-- Sizes -->
+          <!-- 3. Sizes -->
           <div class="control-group">
-            <h4>3. Size</h4>
+            <h4>
+              <span>3. Size Selection</span>
+              <span id="selected-size-tag" style="color: var(--thread); font-size: 0.75rem;">M</span>
+            </h4>
             <div class="size-chips">
               <button class="size-chip" onclick="selectSize('S', this)">S</button>
               <button class="size-chip active" onclick="selectSize('M', this)">M</button>
@@ -776,24 +950,24 @@
             </div>
           </div>
 
-          <!-- Quantity Stepper -->
+          <!-- 4. Quantity Stepper & Tier Discounts -->
           <div class="control-group">
-            <h4>4. Quantity & Tier Pricing</h4>
+            <h4>4. Quantity & Tier Savings</h4>
             <div class="qty-stepper">
               <button class="stepper-btn" onclick="updateQty(-1)">−</button>
               <span class="stepper-val" id="qty-val">1</span>
               <button class="stepper-btn" onclick="updateQty(1)">+</button>
             </div>
             <p style="font-size: 0.8rem; color: var(--paper-muted); margin-top: 0.5rem;">
-              Tier discounts: 10+ (10% off) • 50+ (20% off) • 200+ (30% off)
+              Volume Discounts: 10+ (10% off) • 50+ (20% off) • 200+ (30% off)
             </p>
           </div>
 
-          <!-- Estimated Total -->
+          <!-- Price Calculation & Order/Quote CTA -->
           <div class="price-box">
             <div class="price-row">
               <div>
-                <span style="font-size: 0.8rem; color: var(--paper-dim); text-transform: uppercase;">Estimated Price</span>
+                <span style="font-size: 0.75rem; color: var(--paper-dim); text-transform: uppercase; font-family: 'JetBrains Mono', monospace;">Calculated Total</span>
                 <div class="total-price" id="total-price-display">₹499</div>
                 <div style="font-size: 0.8rem; color: var(--paper-muted);" id="unit-price-display">₹499 per unit</div>
               </div>
@@ -843,7 +1017,7 @@
         </div>
       </div>
 
-      <!-- Why Choose Us Ribbon -->
+      <!-- Stats Ribbon -->
       <div class="stats-ribbon">
         <div class="stat-card">
           <div class="stat-val">4×</div>
@@ -915,7 +1089,6 @@
       <p class="section-desc">Explore recent client prints across events, streetwear, college batches, and sports.</p>
 
       <div class="gallery-grid">
-        <!-- Featured Vinayaka Chavithi -->
         <div class="gallery-card" style="grid-column: span 2;" onclick="switchTab('studio')">
           <div class="gallery-preview" style="height: 280px;">
             <img src="public/img_ganesha_demo.jpg" alt="Vinayaka Chavithi Festive Edition" style="width: 100%; height: 100%; object-fit: cover;">
@@ -972,7 +1145,7 @@
       <p class="section-desc">Review your configured t-shirt quotes and dispatch them directly via WhatsApp.</p>
 
       <div id="quotes-container" class="quotes-list">
-        <!-- Quotes will be inserted dynamically -->
+        <!-- Quotes inserted dynamically -->
       </div>
     </section>
 
@@ -982,7 +1155,6 @@
       <h1 class="section-title">About ThreadCraft & Contact</h1>
       <p class="section-desc">Direct communication, verified customer reviews, and frequently asked questions.</p>
 
-      <!-- Contact Actions -->
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
         <a href="https://wa.me/919000000000" target="_blank" class="stat-card" style="text-decoration: none; display: block;">
           <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">💬</div>
@@ -1006,7 +1178,6 @@
         </div>
       </div>
 
-      <!-- FAQ Accordion -->
       <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 1.25rem;">Frequently Asked Questions</h3>
       <div class="faq-list">
         <div class="faq-card open" onclick="this.classList.toggle('open')">
@@ -1052,17 +1223,23 @@
     </section>
   </main>
 
+  <div id="toast-notify" class="toast">Quote saved to Orders! 📋</div>
+
   <footer>
     <p>© 2026 ThreadCraft Custom Apparel Studio • Built with Jetpack Compose & Web Portal</p>
   </footer>
 
   <script>
-    // App State
+    // State
     let currentTab = 'studio';
     let selectedColor = { id: 'black', name: 'Pitch Black', hex: '#111114' };
-    let selectedDesign = { id: 'vinayaka-chavithi', name: 'Vinayaka Chavithi' };
+    let selectedDesign = { id: 'vinayaka-chavithi', name: 'Vinayaka Chavithi (Festive)' };
     let selectedSize = 'M';
     let qty = 1;
+    let rotationY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let autoRotateInterval = null;
     let savedQuotes = [
       {
         id: 1,
@@ -1093,61 +1270,182 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Studio Customizer Functions
-    function setStudioMode(mode) {
-      const btnPhoto = document.getElementById('btn-mode-photo');
-      const btnVector = document.getElementById('btn-mode-vector');
-      const photoImg = document.getElementById('photo-demo-img');
-      const vectorCanvas = document.getElementById('vector-canvas');
+    // 3D Rotation and Interactive Garment Controls
+    function updateGarmentTransform() {
+      const wrapper = document.getElementById('tshirt-wrapper');
+      const chestPrint = document.getElementById('chest-print-layer');
+      const faceName = document.getElementById('view-face-name');
+      const btnFront = document.getElementById('btn-face-front');
+      const btnBack = document.getElementById('btn-face-back');
 
-      if (mode === 'photo') {
-        btnPhoto.classList.add('active');
-        btnVector.classList.remove('active');
-        photoImg.style.display = 'block';
-        vectorCanvas.style.display = 'none';
+      // Normalize angle to [0, 360)
+      const norm = ((rotationY % 360) + 360) % 360;
+      const isBack = norm >= 90 && norm <= 270;
+
+      wrapper.style.transform = `rotateY(${rotationY}deg)`;
+
+      if (isBack) {
+        faceName.innerText = 'Back View';
+        btnBack.classList.add('active');
+        btnFront.classList.remove('active');
+        // Hide front print on back view
+        chestPrint.style.opacity = '0';
       } else {
-        btnVector.classList.add('active');
-        btnPhoto.classList.remove('active');
-        photoImg.style.display = 'none';
-        vectorCanvas.style.display = 'flex';
+        faceName.innerText = 'Front View';
+        btnFront.classList.add('active');
+        btnBack.classList.remove('active');
+        // Show front print
+        chestPrint.style.opacity = '1';
       }
     }
 
+    function setViewFace(face) {
+      stopAutoRotate();
+      if (face === 'front') {
+        rotationY = 0;
+      } else {
+        rotationY = 180;
+      }
+      updateGarmentTransform();
+    }
+
+    function toggleAutoRotate() {
+      const btn = document.getElementById('btn-auto-rotate');
+      if (autoRotateInterval) {
+        stopAutoRotate();
+      } else {
+        btn.style.background = 'var(--signal)';
+        btn.style.color = '#FFF';
+        autoRotateInterval = setInterval(() => {
+          rotationY = (rotationY + 2) % 360;
+          updateGarmentTransform();
+        }, 30);
+      }
+    }
+
+    function stopAutoRotate() {
+      if (autoRotateInterval) {
+        clearInterval(autoRotateInterval);
+        autoRotateInterval = null;
+        const btn = document.getElementById('btn-auto-rotate');
+        if (btn) {
+          btn.style.background = 'var(--card)';
+          btn.style.color = 'var(--paper-dim)';
+        }
+      }
+    }
+
+    // Drag to Rotate Setup
+    const canvas = document.getElementById('studio-canvas');
+    canvas.addEventListener('mousedown', (e) => {
+      stopAutoRotate();
+      isDragging = true;
+      startX = e.clientX;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const delta = e.clientX - startX;
+      startX = e.clientX;
+      rotationY += delta * 0.8;
+      updateGarmentTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // Touch Support for mobile drag rotation
+    canvas.addEventListener('touchstart', (e) => {
+      stopAutoRotate();
+      isDragging = true;
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const delta = e.touches[0].clientX - startX;
+      startX = e.touches[0].clientX;
+      rotationY += delta * 0.8;
+      updateGarmentTransform();
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+
+    // Color Swatch Selection
     function selectColor(id, name, hex, el) {
       selectedColor = { id, name, hex };
       document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
       el.classList.add('active');
+
       document.getElementById('garment-color-name').innerText = name;
-      document.getElementById('shirt-svg').setAttribute('fill', hex);
+      document.getElementById('selected-color-tag').innerText = name;
+      document.getElementById('shirt-body-path').setAttribute('fill', hex);
+
+      // Adjust collar contrast
+      const collar = document.getElementById('shirt-collar-path');
+      if (id === 'white') {
+        collar.setAttribute('fill', '#DCD8CC');
+      } else {
+        collar.setAttribute('fill', '#0B0C10');
+      }
     }
 
+    // Graphic Design Selection
     function selectDesign(id, name, el) {
       selectedDesign = { id, name };
       document.querySelectorAll('.designs-chips .design-chip').forEach(c => c.classList.remove('active'));
-      el.classList.add('active');
+      if (el) el.classList.add('active');
+      document.getElementById('selected-design-tag').innerText = name;
 
-      const img = document.getElementById('shirt-design-img');
-      const text = document.getElementById('shirt-design-text');
+      const img = document.getElementById('print-image');
+      const text = document.getElementById('print-custom-text');
 
       if (id === 'vinayaka-chavithi') {
         img.style.display = 'block';
         img.src = 'public/img_ganesha_print.jpg';
         text.style.display = 'none';
-        document.getElementById('photo-demo-img').src = 'public/img_ganesha_demo.jpg';
       } else {
         img.style.display = 'none';
         text.style.display = 'block';
         text.innerText = name.toUpperCase();
-        text.style.color = '#F4B14A';
       }
     }
 
+    // Custom File Upload
+    function handleCustomUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        selectedDesign = { id: 'custom-upload', name: file.name };
+        document.getElementById('selected-design-tag').innerText = file.name;
+
+        document.querySelectorAll('.designs-chips .design-chip').forEach(c => c.classList.remove('active'));
+
+        const img = document.getElementById('print-image');
+        const text = document.getElementById('print-custom-text');
+        img.style.display = 'block';
+        img.src = evt.target.result;
+        text.style.display = 'none';
+
+        showToast('Loaded custom artwork onto shirt!');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Size Picker
     function selectSize(size, el) {
       selectedSize = size;
       document.querySelectorAll('.size-chip').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
+      document.getElementById('selected-size-tag').innerText = size;
     }
 
+    // Quantity & Bulk Pricing
     function updateQty(delta) {
       qty = Math.max(1, qty + delta);
       document.getElementById('qty-val').innerText = qty;
@@ -1165,9 +1463,10 @@
       const total = unit * qty;
 
       document.getElementById('total-price-display').innerText = '₹' + total.toLocaleString('en-IN');
-      document.getElementById('unit-price-display').innerText = '₹' + unit.toLocaleString('en-IN') + ' per unit' + (discount > 0 ? ` (${discount * 100}% off)` : '');
+      document.getElementById('unit-price-display').innerText = '₹' + unit.toLocaleString('en-IN') + ' per unit' + (discount > 0 ? ` (${discount * 100}% volume savings)` : '');
     }
 
+    // Quotes Management
     function saveQuote() {
       let discount = 0;
       if (qty >= 200) discount = 0.30;
@@ -1185,8 +1484,12 @@
         total: '₹' + total.toLocaleString('en-IN'),
         unit: '₹' + unit.toLocaleString('en-IN')
       });
+
       renderQuotes();
-      switchTab('orders');
+      showToast('Saved quote! Opening Orders tab...');
+      setTimeout(() => {
+        switchTab('orders');
+      }, 700);
     }
 
     function renderQuotes() {
@@ -1199,8 +1502,8 @@
           <div style="text-align: center; padding: 3rem; background: var(--card); border-radius: 18px; border: 1px solid var(--border);">
             <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📋</div>
             <h3>No saved quotes yet</h3>
-            <p style="color: var(--paper-dim); margin: 0.5rem 0 1.5rem;">Configure your garment in the 3D studio and save your quote.</p>
-            <button class="hero-btn hero-btn-primary" onclick="switchTab('studio')">Go to 3D Studio</button>
+            <p style="color: var(--paper-dim); margin: 0.5rem 0 1.5rem;">Configure your garment in the 3D studio and click "Save Quote".</p>
+            <button class="hero-btn hero-btn-primary" onclick="switchTab('studio')">Open 3D Studio</button>
           </div>
         `;
         return;
@@ -1213,11 +1516,11 @@
               SAVED CONFIGURATION
             </div>
             <h3 style="font-size: 1.15rem; font-weight: 700;">${q.qty}× ${q.color} Tee (${q.size})</h3>
-            <p style="color: var(--paper-dim); font-size: 0.85rem;">Print: ${q.design} • Unit: ${q.unit}</p>
+            <p style="color: var(--paper-dim); font-size: 0.85rem;">Design: ${q.design} • Unit: ${q.unit}</p>
           </div>
           <div style="display: flex; align-items: center; gap: 1rem;">
             <div style="font-size: 1.5rem; font-weight: 800; color: var(--paper);">${q.total}</div>
-            <a href="https://wa.me/919000000000?text=Hi!%20I'd%20like%20to%20place%20an%20order%20for%20${q.qty}%20units%20of%20${q.color}%20(${q.size})%20with%20design%20${q.design}.%20Total:%20${q.total}" target="_blank" class="hero-btn hero-btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+            <a href="https://wa.me/919000000000?text=Hi!%20I'd%20like%20to%20place%20an%20order%20for%20${q.qty}%20units%20of%20${encodeURIComponent(q.color)}%20(${q.size})%20with%20design%20${encodeURIComponent(q.design)}.%20Total:%20${encodeURIComponent(q.total)}" target="_blank" class="hero-btn hero-btn-primary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
               WhatsApp Order 💬
             </a>
           </div>
@@ -1225,9 +1528,19 @@
       `).join('');
     }
 
-    // Initialize
+    function showToast(msg) {
+      const t = document.getElementById('toast-notify');
+      t.innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => {
+        t.classList.remove('show');
+      }, 2500);
+    }
+
+    // Run Initial Setup
     calculatePrice();
     renderQuotes();
+    updateGarmentTransform();
   </script>
 </body>
 </html>
